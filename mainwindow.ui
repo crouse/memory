@@ -245,6 +245,7 @@
    <addaction name="actionDict"/>
    <addaction name="actionList"/>
    <addaction name="actionCurrentDateRows"/>
+   <addaction name="actionExport"/>
   </widget>
   <action name="actionDict">
    <property name="text">
@@ -259,6 +260,14 @@
   <action name="actionCurrentDateRows">
    <property name="text">
     <string>currentDateRows</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>export</string>
+   </property>
+   <property name="toolTip">
+    <string>备份数据库到文档路径</string>
    </property>
   </action>
  </widget>

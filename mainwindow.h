@@ -50,6 +50,8 @@ private slots:
 
     void on_actionCurrentDateRows_triggered();
 
+    void on_actionExport_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

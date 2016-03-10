@@ -45,6 +45,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->actionList->setText(QChar(fa::barchart));
     ui->actionList->setFont(awesome->font(16));
 
+    ui->actionExport->setText(QChar(fa::umbrella));
+    ui->actionExport->setFont(awesome->font(16));
+
     ui->dateEditEcurrent->setDate(QDate::currentDate());
     ui->dateEditEBirth->setDate(QDate(1900, 1, 1));
 }
@@ -70,7 +73,8 @@ void MainWindow::setDatabase()
                                   " phone varchar(32), "
                                   " birthday datetime, "
                                   " logdate datetime,"
-                                  " current datetime"
+                                  " current datetime,"
+                                  " ps varchar(64)"
                                   ");");
         QString signDictSql = QString("Create table sign_dict ( "
                                       " name varchar(32), "
@@ -94,7 +98,7 @@ void MainWindow::setDatabase()
         QStringList signTableFieldsStringList;
         QStringList signDictTableFieldsStringList;
 
-        signTableFieldsStringList << "姓名" << "性别" << "手机" << "生日" << "日期" << "当前记录时间";
+        signTableFieldsStringList << "姓名" << "性别" << "手机" << "生日" << "日期" << "当前记录时间" << "附注";
         signDictTableFieldsStringList << "姓名" << "性别" << "手机" << "生日" << "签到次数";
 
         setModel(ui->tableViewSigns, "modelEdit", "sign", &signTableFieldsStringList, "", 0);
@@ -315,4 +319,9 @@ void MainWindow::on_actionCurrentDateRows_triggered()
     modelEdit->setFilter(QString("logdate = '%1'").arg(ui->dateEditEcurrent->date().toString("yyyy-MM-dd 00:00:00")));
     modelEdit->select();
     ui->tableViewSigns->reset();
+}
+
+void MainWindow::on_actionExport_triggered()
+{
+    qDebug() << "export current backups";
 }
