@@ -32,6 +32,8 @@ public:
     QSqlDatabase database;
     QSqlTableModel *modelEdit;
     QSqlTableModel *modelChoose;
+    QSqlTableModel *modelQ;
+    QSqlTableModel *modelQE;
     QSqlTableModel *modelQuery;
     QLineEdit *searchLineEdit;
 

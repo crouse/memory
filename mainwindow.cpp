@@ -30,14 +30,24 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->labelName->setText(QChar(fa::smileo));
     ui->labelName->setFont(awesome->font(16));
 
+    ui->labelQName->setText(QChar(fa::smileo));
+    ui->labelQName->setFont(awesome->font(16));
+
+
     ui->labelPhone->setText(QString("%1|%2").arg(QChar(fa::phone)).arg(QChar(fa::mobilephone)));
     ui->labelPhone->setFont(awesome->font(16));
+
+    ui->labelQPhone->setText(QString("%1|%2").arg(QChar(fa::phone)).arg(QChar(fa::mobilephone)));
+    ui->labelQPhone->setFont(awesome->font(16));
 
     ui->labelDate->setText(QChar(fa::calendar));
     ui->labelDate->setFont(awesome->font(16));
 
     ui->labelGender->setText(QString("%1|%2").arg(QChar(fa::male)).arg(QChar(fa::female)));
     ui->labelGender->setFont(awesome->font(16));
+
+    ui->labelQGender->setText(QString("%1|%2").arg(QChar(fa::male)).arg(QChar(fa::female)));
+    ui->labelQGender->setFont(awesome->font(16));
 
     ui->actionDict->setText(QChar(fa::refresh));
     ui->actionDict->setFont(awesome->font(16));
@@ -47,6 +57,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->actionExport->setText(QChar(fa::umbrella));
     ui->actionExport->setFont(awesome->font(16));
+
+    ui->pushButtonQ->setText(QString("%1 %2").arg(QChar(fa::search)).arg("search"));
+    ui->pushButtonQ->setFont(awesome->font(14));
 
     ui->dateEditEcurrent->setDate(QDate::currentDate());
     ui->dateEditEBirth->setDate(QDate(1900, 1, 1));
@@ -103,6 +116,8 @@ void MainWindow::setDatabase()
 
         setModel(ui->tableViewSigns, "modelEdit", "sign", &signTableFieldsStringList, "", 0);
         setModel(ui->tableViewDict, "modelChoose", "sign_dict", &signDictTableFieldsStringList, "", 4);
+        setModel(ui->tableViewQDict, "modelQ", "sign_dict", &signDictTableFieldsStringList, "", 4);
+        setModel(ui->tableView, "modelQE", "sign", &signTableFieldsStringList, "", 0);
     }
 }
 
@@ -115,6 +130,12 @@ void MainWindow::setModel(QTableView *tableViewName, QString modelName, QString 
     } else if (modelName == "modelChoose") {
         modelChoose = new QSqlTableModel;
         model = modelChoose;
+    } else if (modelName == "modelQ") {
+        modelQ = new QSqlTableModel;
+        model = modelQ;
+    } else if (modelName == "modelQE") {
+        modelQE = new QSqlTableModel;
+        model = modelQE;
     } else {
         return;
     }
@@ -156,6 +177,16 @@ void MainWindow::setMainToolBar()
 void MainWindow::on_tabWidget_tabBarClicked(int index)
 {
     qDebug() << index;
+    switch(index) {
+    case 0:
+        ui->lineEditEname->setFocus();
+        break;
+    case 1:
+        ui->lineEditQName->setFocus();
+        break;
+    default:
+        break;
+    }
 }
 
 void MainWindow::initDict()
