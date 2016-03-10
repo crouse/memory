@@ -188,6 +188,12 @@
           <property name="alternatingRowColors">
            <bool>true</bool>
           </property>
+          <property name="selectionMode">
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
           <attribute name="horizontalHeaderCascadingSectionResizes">
            <bool>false</bool>
           </attribute>
@@ -238,6 +244,7 @@
    </attribute>
    <addaction name="actionDict"/>
    <addaction name="actionList"/>
+   <addaction name="actionCurrentDateRows"/>
   </widget>
   <action name="actionDict">
    <property name="text">
@@ -247,6 +254,11 @@
   <action name="actionList">
    <property name="text">
     <string>list</string>
+   </property>
+  </action>
+  <action name="actionCurrentDateRows">
+   <property name="text">
+    <string>currentDateRows</string>
    </property>
   </action>
  </widget>

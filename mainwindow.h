@@ -22,9 +22,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void setDatabase();
-    void setModel(QTableView *tableViewName, QSqlTableModel *modelName, QString tableName, QStringList *tableFields, QString filter);
+    void setModel(QTableView *tableViewName, QString modelName, QString tableName, QStringList *tableFields, QString filter, int orderNum);
     void setMainToolBar();
     void initDict();
+    int updateDict(QString name, QString gender, QString phone, QString birthday);
+    bool ifSignedToday(QString name, QString gender, QString phone, QString logdate);
+    void clearEdits();
+    int choose();
     QSqlDatabase database;
     QSqlTableModel *modelEdit;
     QSqlTableModel *modelChoose;
@@ -39,6 +43,12 @@ private slots:
     void on_actionList_triggered();
 
     void on_pushButtonEsave_clicked();
+
+    void on_tableViewDict_doubleClicked(const QModelIndex &index);
+
+    void on_lineEditEname_editingFinished();
+
+    void on_actionCurrentDateRows_triggered();
 
 private:
     Ui::MainWindow *ui;
