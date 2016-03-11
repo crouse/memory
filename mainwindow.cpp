@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QColor>
 #include <QLabel>
+#include <QStringList>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -49,6 +50,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->labelQGender->setText(QString("%1|%2").arg(QChar(fa::male)).arg(QChar(fa::female)));
     ui->labelQGender->setFont(awesome->font(16));
 
+    ui->spinBoxDay->setRange(0, 31);
+    ui->spinBoxMonth->setRange(0, 12);
+
     ui->actionDict->setText(QChar(fa::refresh));
     ui->actionDict->setFont(awesome->font(16));
 
@@ -63,6 +67,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->dateEditEcurrent->setDate(QDate::currentDate());
     ui->dateEditEBirth->setDate(QDate(1900, 1, 1));
+    ui->dateEditQ->setDate(QDate(1900, 1, 1));
 }
 
 MainWindow::~MainWindow()
@@ -164,9 +169,11 @@ void MainWindow::setModel(QTableView *tableViewName, QString modelName, QString 
         modelEdit = model;
     } else if (modelName == "modelChoose") {
         modelChoose = model;
-    } else {
-        return;
-    }
+    } else if (modelName == "modelQ") {
+        modelQ = model;
+    } else if (modelName == "modelQE") {
+        modelQE = model;
+    } else return;
 }
 
 void MainWindow::setMainToolBar()
@@ -287,7 +294,7 @@ void MainWindow::on_pushButtonEsave_clicked()
     QString gender = ui->comboBoxEgender->currentText().trimmed();
     QString phone = ui->lineEditEphone->text().trimmed();
     QString birthday = ui->dateEditEBirth->date().toString("yyyy-MM-dd");
-    QString logdate = ui->dateEditEcurrent->dateTime().toString("yyyy-MM-dd HH:mm:ss");
+    QString logdate = ui->dateEditEcurrent->date().toString("yyyy-MM-dd");
 
     if (!ui->tableViewDict->isHidden()) {
         ui->tableViewDict->hide();
@@ -347,7 +354,7 @@ void MainWindow::on_lineEditEname_editingFinished()
 
 void MainWindow::on_actionCurrentDateRows_triggered()
 {
-    modelEdit->setFilter(QString("logdate = '%1'").arg(ui->dateEditEcurrent->date().toString("yyyy-MM-dd 00:00:00")));
+    modelEdit->setFilter(QString("logdate = '%1'").arg(ui->dateEditEcurrent->date().toString("yyyy-MM-dd")));
     modelEdit->select();
     ui->tableViewSigns->reset();
 }
@@ -355,4 +362,79 @@ void MainWindow::on_actionCurrentDateRows_triggered()
 void MainWindow::on_actionExport_triggered()
 {
     qDebug() << "export current backups";
+}
+
+void MainWindow::on_pushButtonQ_clicked()
+{
+    QString name = ui->lineEditQName->text().trimmed();
+    QString gender = ui->comboBoxQGender->currentText();
+    QString logdate = "";
+    QDate date = ui->dateEditQ->date();
+    if (date != QDate(1900, 1,1)) {
+        logdate = date.toString("yyyy-MM-dd");
+    }
+
+    qDebug() << "logdate: " << logdate;
+
+    int month = ui->spinBoxMonth->value();
+    int day = ui->spinBoxDay->value();
+    QString filter;
+
+    QMap<QString, QString> map;
+    map["name"] = name;
+    map["gender"] = gender;
+    map["logdate"] = logdate;
+
+    QStringList lst;
+    lst << "name" << "gender" << "logdate";
+    int i = 0;
+    foreach (QString k, lst) {
+        if (!map[k].isEmpty()) {
+            qDebug() << k << map[k];
+            if (i >0) {
+                filter.append(QString(" and %1 = '%2'").arg(k).arg(map[k]));
+            } else {
+                filter.append(QString(" %1 = '%2'").arg(k).arg(map[k]));
+            }
+            i++;
+        }
+    }
+
+    modelQ->setFilter(filter);
+    modelQ->select();
+    qDebug() << "filter: " << modelQ->filter();
+    ui->tableViewQDict->reset();
+}
+
+void MainWindow::on_tableViewQDict_doubleClicked(const QModelIndex &index)
+{
+    QString filter;
+    int rowNum = index.row();
+    QString name = modelQ->record(rowNum).value("name").toString().trimmed();
+    QString phone = modelQ->record(rowNum).value("phone").toString().trimmed();
+    QString gender = modelQ->record(rowNum).value("gender").toString().trimmed();
+
+    QMap<QString, QString> map;
+    map["name"] = name;
+    map["gender"] = gender;
+    map["phone"] = phone;
+
+    QStringList lst;
+    lst << "name" << "gender" << "phone";
+    int i = 0;
+    foreach (QString k, lst) {
+        if (!map[k].isEmpty()) {
+            qDebug() << k << map[k];
+            if (i >0) {
+                filter.append(QString(" and %1 = '%2'").arg(k).arg(map[k]));
+            } else {
+                filter.append(QString(" %1 = '%2'").arg(k).arg(map[k]));
+            }
+            i++;
+        }
+    }
+
+    modelQE->setFilter(filter);
+    modelQE->select();
+    ui->tableView->reset();
 }

@@ -54,6 +54,10 @@ private slots:
 
     void on_actionExport_triggered();
 
+    void on_pushButtonQ_clicked();
+
+    void on_tableViewQDict_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
 };

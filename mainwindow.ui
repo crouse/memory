@@ -274,6 +274,9 @@
              <property name="showGroupSeparator" stdset="0">
               <bool>false</bool>
              </property>
+             <property name="displayIntegerBase">
+              <number>10</number>
+             </property>
             </widget>
            </item>
            <item>
@@ -297,6 +300,13 @@
             <widget class="QLineEdit" name="lineEditQPhone">
              <property name="placeholderText">
               <string>电话：</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDateEdit" name="dateEditQ">
+             <property name="displayFormat">
+              <string>yyyy-MM-dd</string>
              </property>
             </widget>
            </item>
