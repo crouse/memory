@@ -304,13 +304,6 @@
             </widget>
            </item>
            <item>
-            <widget class="QDateEdit" name="dateEditQ">
-             <property name="displayFormat">
-              <string>yyyy-MM-dd</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QPushButton" name="pushButtonQ">
              <property name="text">
               <string>query</string>

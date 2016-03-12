@@ -67,7 +67,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->dateEditEcurrent->setDate(QDate::currentDate());
     ui->dateEditEBirth->setDate(QDate(1900, 1, 1));
-    ui->dateEditQ->setDate(QDate(1900, 1, 1));
 }
 
 MainWindow::~MainWindow()
@@ -368,35 +367,41 @@ void MainWindow::on_pushButtonQ_clicked()
 {
     QString name = ui->lineEditQName->text().trimmed();
     QString gender = ui->comboBoxQGender->currentText();
-    QString logdate = "";
-    QDate date = ui->dateEditQ->date();
-    if (date != QDate(1900, 1,1)) {
-        logdate = date.toString("yyyy-MM-dd");
-    }
-
-    qDebug() << "logdate: " << logdate;
-
+    QString phone = ui->lineEditQPhone->text().trimmed();
     int month = ui->spinBoxMonth->value();
     int day = ui->spinBoxDay->value();
     QString filter;
 
+    QString monthStr;
+
+    qDebug() << month << day;
+    if(month) {
+        monthStr = QString("%1").arg(month, 2, 10, QChar('0'));
+    } else {
+        monthStr = "%";
+    }
+
+    QString dayStr;
+    if (day) {
+        dayStr = QString("%1").arg(day, 2, 10, QChar('0'));
+        qDebug() << "dayStr= " << dayStr;
+    } else {
+        dayStr = "%";
+    }
+
+    QString birthday = QString(" birthday like '%-%2-%3'").arg(monthStr).arg(dayStr);
+    filter = birthday;
+
     QMap<QString, QString> map;
     map["name"] = name;
     map["gender"] = gender;
-    map["logdate"] = logdate;
+    map["phone"] = phone;
 
     QStringList lst;
-    lst << "name" << "gender" << "logdate";
-    int i = 0;
+    lst << "name" << "gender" << "phone";
     foreach (QString k, lst) {
         if (!map[k].isEmpty()) {
-            qDebug() << k << map[k];
-            if (i >0) {
-                filter.append(QString(" and %1 = '%2'").arg(k).arg(map[k]));
-            } else {
-                filter.append(QString(" %1 = '%2'").arg(k).arg(map[k]));
-            }
-            i++;
+            filter.append(QString(" and %1 = '%2'").arg(k).arg(map[k]));
         }
     }
 
