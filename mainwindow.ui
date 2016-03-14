@@ -33,7 +33,7 @@
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideRight</enum>
@@ -168,6 +168,9 @@
              </property>
              <property name="text">
               <string>保存</string>
+             </property>
+             <property name="shortcut">
+              <string>Return</string>
              </property>
              <property name="flat">
               <bool>true</bool>
