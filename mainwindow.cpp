@@ -8,6 +8,13 @@
 #include <QColor>
 #include <QLabel>
 #include <QStringList>
+#include <QFile>
+#include <QTextStream>
+#include <QByteArray>
+#include <QDropEvent>
+#include <QUrl>
+#include <QList>
+#include <QtGui>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setDatabase();
+    setAcceptDrops(true);
     ui->tableViewDict->hide();
     setMainToolBar();
     ui->lineEditEname->setFocus();
@@ -475,3 +483,128 @@ void MainWindow::on_actionUpdatePerson_triggered()
     query.exec(updatePersonByNameSqlDict);
     database.commit();
 }
+
+void MainWindow::on_pushButtonDataExport_clicked()
+{
+    QString start = ui->dateEditDataExportStart->date().toString("yyyy-MM-dd");
+    QString end = ui->dateEditDataExportEnd->date().toString("yyyy-MM-dd");
+    QString exportSql = QString("select name, gender, phone, birthday, logdate,  ps from sign where logdate >= '%1' and logdate <= '%2'").arg(start).arg(end);
+    QString savePath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+    QString saveFile = QString("%1_%2.data").arg(start).arg(end);
+    QString saveAbsPath = QString("%1/%2").arg(savePath).arg(saveFile);
+    qDebug() << exportSql;
+
+    QFile fileOut(saveAbsPath);
+    if (!fileOut.open(QIODevice::WriteOnly| QIODevice::Text)) {
+        qDebug() << "open file error";
+        QMessageBox::information(this, "", "贤二，出错了，文件打不开。你找写代码的那家伙吧，我帮不上你。");
+        return;
+    }
+
+    QTextStream streamFileOut(&fileOut);
+    streamFileOut.setCodec("UTF-8");
+
+    QSqlQuery query;
+    query.exec(exportSql);
+    while(query.next()) {
+        QString name = query.value(0).toString();
+        QString gender = query.value(1).toString();
+        QString phone = query.value(2).toString();
+        QString birthday = query.value(3).toString();
+        QString logdate = query.value(4).toString();
+        QString current = query.value(5).toString();
+        QString ps = query.value(6).toString();
+        QString recordStr = name + "," + gender + "," + phone + "," + birthday + "," + logdate + "," + current + "," + ps +  "\n";
+        QByteArray base64;
+        base64.append(recordStr);
+        QString base64Str = base64.toBase64();
+        streamFileOut << base64Str << "\n";
+        qDebug() << name << gender << phone << birthday << logdate << current;
+        streamFileOut.flush();
+    }
+
+    fileOut.close();
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("text/uri-list")) {
+        event->acceptProposedAction();
+    }
+}
+
+void MainWindow::dropEvent(QDropEvent *event)
+{
+    QList<QUrl> urls = event->mimeData()->urls();
+    if (urls.isEmpty()) return;
+    QString fileName = urls.first().toLocalFile();
+    qDebug() << fileName;
+    ui->lineEditDataImport->setText(fileName);
+}
+
+void MainWindow::on_pushButtonDataImport_clicked()
+{
+    QString fileName = ui->lineEditDataImport->text().trimmed();
+    if (fileName.isEmpty()) {
+        QMessageBox::information(this, "", "贤二，你坑我！你给我个空文件干嘛！");
+        return;
+    }
+
+   QFile openFile(fileName);
+   if (!openFile.open(QIODevice::ReadOnly)) {
+       QMessageBox::information(0, "", openFile.errorString());
+       return;
+   }
+
+   QSqlQuery query;
+
+   QTextStream in(&openFile);
+   while(!in.atEnd()) {
+       QString line = in.readLine().trimmed();
+       QByteArray byteArray = line.toLatin1();
+       QByteArray text = QByteArray::fromBase64(byteArray);
+       QString out = text.data();
+       QString outLine = out.trimmed();
+
+       if (outLine.isEmpty()) {
+           qDebug() << "empty line";
+           continue;
+       }
+
+       qDebug() << outLine;
+       query.prepare("insert into sign (name, gender, phone, birthday, logdate, current, ps) values "
+                     " (:name, :gender, :phone, :birthday, :logdate, :current, :ps)");
+       QStringList recList = outLine.split(",");
+
+       QString name = recList.at(0);
+       QString gender = recList.at(1);
+       QString phone = recList.at(2);
+       QString birthday = recList.at(3);
+       QString logdate = recList.at(4);
+       QString current = recList.at(5);
+       QString ps = recList.at(6);
+
+       query.bindValue(0, name);
+       query.bindValue(1, gender);
+       query.bindValue(2, phone);
+       query.bindValue(3, birthday);
+       query.bindValue(4, logdate);
+       query.bindValue(5, current);
+       query.bindValue(6, ps);
+       query.exec();
+   }
+   database.commit();
+   openFile.close();
+   ui->lineEditDataImport->clear();
+   ui->labelAlert->setText(QString("贤二，刚才你导入了这个文件：%1 ").arg(fileName));
+   qDebug() << "我在后面，你没看到我嘛";
+}
+
+
+
+
+
+
+
+
+

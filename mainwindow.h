@@ -37,6 +37,10 @@ public:
     QSqlTableModel *modelQuery;
     QLineEdit *searchLineEdit;
 
+protected:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
+
 private slots:
     void on_tabWidget_tabBarClicked(int index);
 
@@ -59,6 +63,10 @@ private slots:
     void on_tableViewQDict_doubleClicked(const QModelIndex &index);
 
     void on_actionUpdatePerson_triggered();
+
+    void on_pushButtonDataExport_clicked();
+
+    void on_pushButtonDataImport_clicked();
 
 private:
     Ui::MainWindow *ui;
