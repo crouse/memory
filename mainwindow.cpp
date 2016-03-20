@@ -353,7 +353,7 @@ void MainWindow::on_lineEditEname_editingFinished()
 
 void MainWindow::on_actionCurrentDateRows_triggered()
 {
-    modelEdit->setFilter(QString("logdate = '%1'").arg(ui->dateEditEcurrent->date().toString("yyyy-MM-dd")));
+    modelEdit->setFilter(QString(" logdate = '%1'").arg(ui->dateEditEcurrent->date().toString("yyyy-MM-dd")));
     modelEdit->select();
     ui->tableViewSigns->reset();
 }
@@ -389,7 +389,18 @@ void MainWindow::on_pushButtonQ_clicked()
         dayStr = "%";
     }
 
-    QString birthday = QString(" birthday like '%-%2-%3'").arg(monthStr).arg(dayStr);
+    QString birthday;
+
+    if (month && day) {
+        birthday = QString(" birthday like '%-%2-%3'").arg(monthStr).arg(dayStr);
+    } else if (month && !day) {
+        birthday = QString(" birthday like '%-%1-%'").arg(monthStr);
+    } else if (day && !month) {
+        birthday = QString(" birthday like '%-%-%1'").arg(dayStr);
+    } else {
+        birthday = " birthday like '%' ";
+    }
+
     filter = birthday;
 
     QMap<QString, QString> map;
