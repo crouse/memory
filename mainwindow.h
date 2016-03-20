@@ -58,6 +58,8 @@ private slots:
 
     void on_tableViewQDict_doubleClicked(const QModelIndex &index);
 
+    void on_actionUpdatePerson_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

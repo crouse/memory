@@ -33,7 +33,7 @@
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideRight</enum>
@@ -347,6 +347,72 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="tabData">
+       <attribute name="title">
+        <string>导出</string>
+       </attribute>
+       <widget class="QGroupBox" name="groupBoxDataExport">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>70</y>
+          <width>461</width>
+          <height>73</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>==&gt; 按日期导出签到数据: &lt;==</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <item>
+          <widget class="QDateEdit" name="dateEditDataExportStart">
+           <property name="displayFormat">
+            <string>yyyy-MM-dd</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDateEdit" name="dateEditDataExportEnd">
+           <property name="displayFormat">
+            <string>yyyy-MM-dd</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButtonDataExport">
+           <property name="text">
+            <string>导出数据</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>150</y>
+          <width>461</width>
+          <height>70</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>==&gt; 导入数据：&lt;==</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLineEdit" name="lineEditDataImport"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButtonDataImport">
+           <property name="text">
+            <string>导入数据</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -380,6 +446,7 @@
    <addaction name="actionList"/>
    <addaction name="actionCurrentDateRows"/>
    <addaction name="actionExport"/>
+   <addaction name="actionUpdatePerson"/>
   </widget>
   <action name="actionDict">
    <property name="text">
@@ -402,6 +469,11 @@
    </property>
    <property name="toolTip">
     <string>备份数据库到文档路径</string>
+   </property>
+  </action>
+  <action name="actionUpdatePerson">
+   <property name="text">
+    <string>updatePersonByName</string>
    </property>
   </action>
  </widget>

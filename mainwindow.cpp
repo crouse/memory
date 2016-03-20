@@ -454,3 +454,24 @@ void MainWindow::on_tableViewQDict_doubleClicked(const QModelIndex &index)
     modelQE->select();
     ui->tableView->reset();
 }
+
+void MainWindow::on_actionUpdatePerson_triggered()
+{
+    QString name = ui->lineEditEname->text().trimmed();
+    QString phone = ui->lineEditEphone->text().trimmed();
+    QString birthday = ui->dateEditEBirth->dateTime().toString("yyyy-MM-dd");
+
+    if (name.isEmpty()) {
+        QMessageBox::information(this, "", "贤二，人家的名字你没输入，你咋搞的？");
+        return;
+    }
+
+    QString updatePersonByNameSql = QString("update sign set phone = '%1', birthday = '%2' where name = '%3'").arg(phone).arg(birthday).arg(name);
+    QString updatePersonByNameSqlDict = QString("update sign_dict set phone = '%1', birthday = '%2' where name = '%3'").arg(phone).arg(birthday).arg(name);
+    qDebug() << updatePersonByNameSql;
+
+    QSqlQuery query;
+    query.exec(updatePersonByNameSql);
+    query.exec(updatePersonByNameSqlDict);
+    database.commit();
+}
