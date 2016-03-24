@@ -75,6 +75,8 @@ private slots:
 
     void on_tableViewNoteHuman_doubleClicked(const QModelIndex &index);
 
+    void on_pushButtonSaveNote_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

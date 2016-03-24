@@ -636,6 +636,13 @@ void MainWindow::on_tableViewNoteHuman_doubleClicked(const QModelIndex &index)
     qDebug() << name << gender << phone << birthday;
     ui->lineEditNoteName->setText(name);
     ui->lineEditNotePhone->setText(phone);
-    ui->plainTextEditNote->setAcceptDrops(true);
     ui->plainTextEditNote->setFocus();
+}
+
+void MainWindow::on_pushButtonSaveNote_clicked()
+{
+    if (ui->lineEditNoteName->text().isEmpty()) {
+        qDebug() << "name is empty";
+        return;
+    }
 }

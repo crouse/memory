@@ -495,6 +495,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>当前记录的是：</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QLineEdit" name="lineEditNoteName">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -508,6 +515,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>手机号为：</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QLineEdit" name="lineEditNotePhone">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -517,6 +531,13 @@
             </property>
             <property name="readOnly">
              <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonSaveNote">
+            <property name="text">
+             <string>保存记录</string>
             </property>
            </widget>
           </item>
