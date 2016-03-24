@@ -123,15 +123,18 @@ void MainWindow::setDatabase()
 
         QStringList signTableFieldsStringList;
         QStringList signDictTableFieldsStringList;
+        QStringList notesStringList;
 
         signTableFieldsStringList << "姓名" << "性别" << "手机" << "生日" << "日期" << "当前记录时间" << "附注";
         signDictTableFieldsStringList << "姓名" << "性别" << "手机" << "生日" << "签到次数";
+        notesStringList << "时间" << "姓名" << "手机" << "发言记录";
 
         setModel(ui->tableViewSigns, "modelEdit", "sign", &signTableFieldsStringList, "", 0);
         setModel(ui->tableViewDict, "modelChoose", "sign_dict", &signDictTableFieldsStringList, "", 4);
         setModel(ui->tableViewQDict, "modelQ", "sign_dict", &signDictTableFieldsStringList, "", 4);
         setModel(ui->tableView, "modelQE", "sign", &signTableFieldsStringList, "", 0);
         setModel(ui->tableViewNoteHuman, "modelNote", "sign", &signTableFieldsStringList, "", 0);
+        setModel(ui->tableViewNoteList, "modelNotes", "notes", &notesStringList, "", 0);
     }
 }
 
@@ -153,6 +156,9 @@ void MainWindow::setModel(QTableView *tableViewName, QString modelName, QString 
     } else if (modelName == "modelNote") {
         modelNote = new QSqlTableModel;
         model = modelNote;
+    } else if (modelName== "modelNotes") {
+        modelNotes = new QSqlTableModel;
+        model = modelNotes;
     } else {
         return;
     }
@@ -187,6 +193,8 @@ void MainWindow::setModel(QTableView *tableViewName, QString modelName, QString 
         modelQE = model;
     } else if (modelName == "modelNote") {
         modelNote = model;
+    } else if (modelName == "modelNotes") {
+        modelNotes = model;
     } else return;
 }
 
@@ -641,8 +649,6 @@ void MainWindow::on_tableViewNoteHuman_doubleClicked(const QModelIndex &index)
 
 void MainWindow::on_pushButtonSaveNote_clicked()
 {
-    if (ui->lineEditNoteName->text().isEmpty()) {
-        qDebug() << "name is empty";
-        return;
-    }
+    if (ui->lineEditNoteName->text().isEmpty()) return;
+
 }

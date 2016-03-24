@@ -35,6 +35,7 @@ public:
     QSqlTableModel *modelQ;
     QSqlTableModel *modelQE;
     QSqlTableModel *modelNote;
+    QSqlTableModel *modelNotes;
     QSqlTableModel *modelQuery;
     QLineEdit *searchLineEdit;
 
