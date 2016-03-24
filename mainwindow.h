@@ -73,6 +73,8 @@ private slots:
 
     void on_dateEditNote_dateChanged(const QDate &date);
 
+    void on_tableViewNoteHuman_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::MainWindow *ui;
 };

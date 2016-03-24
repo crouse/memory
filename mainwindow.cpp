@@ -625,3 +625,17 @@ void MainWindow::on_dateEditNote_dateChanged(const QDate &date)
     modelNote->select();
     ui->tableViewNoteHuman->reset();
 }
+
+void MainWindow::on_tableViewNoteHuman_doubleClicked(const QModelIndex &index)
+{
+    int rowNum = index.row();
+    QString name = modelNote->record(rowNum).value("name").toString();
+    QString gender = modelNote->record(rowNum).value("gender").toString();
+    QString phone = modelNote->record(rowNum).value("phone").toString();
+    QDate birthday = modelNote->record(rowNum).value("birthday").toDate();
+    qDebug() << name << gender << phone << birthday;
+    ui->lineEditNoteName->setText(name);
+    ui->lineEditNotePhone->setText(phone);
+    ui->plainTextEditNote->setAcceptDrops(true);
+    ui->plainTextEditNote->setFocus();
+}
