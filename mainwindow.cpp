@@ -75,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->dateEditEcurrent->setDate(QDate::currentDate());
     ui->dateEditEBirth->setDate(QDate(1900, 1, 1));
+    ui->dateEditNote->setDate(QDate::currentDate());
 }
 
 MainWindow::~MainWindow()
@@ -130,6 +131,7 @@ void MainWindow::setDatabase()
         setModel(ui->tableViewDict, "modelChoose", "sign_dict", &signDictTableFieldsStringList, "", 4);
         setModel(ui->tableViewQDict, "modelQ", "sign_dict", &signDictTableFieldsStringList, "", 4);
         setModel(ui->tableView, "modelQE", "sign", &signTableFieldsStringList, "", 0);
+        setModel(ui->tableViewNoteHuman, "modelNote", "sign", &signTableFieldsStringList, "", 0);
     }
 }
 
@@ -148,6 +150,9 @@ void MainWindow::setModel(QTableView *tableViewName, QString modelName, QString 
     } else if (modelName == "modelQE") {
         modelQE = new QSqlTableModel;
         model = modelQE;
+    } else if (modelName == "modelNote") {
+        modelNote = new QSqlTableModel;
+        model = modelNote;
     } else {
         return;
     }
@@ -180,6 +185,8 @@ void MainWindow::setModel(QTableView *tableViewName, QString modelName, QString 
         modelQ = model;
     } else if (modelName == "modelQE") {
         modelQE = model;
+    } else if (modelName == "modelNote") {
+        modelNote = model;
     } else return;
 }
 
@@ -197,6 +204,12 @@ void MainWindow::on_tabWidget_tabBarClicked(int index)
         break;
     case 1:
         ui->lineEditQName->setFocus();
+        break;
+    case 2:
+        break;
+    case 3:
+        modelNote->select();
+        ui->tableViewNoteHuman->reset();
         break;
     default:
         break;
@@ -600,11 +613,15 @@ void MainWindow::on_pushButtonDataImport_clicked()
    qDebug() << "我在后面，你没看到我嘛";
 }
 
+void MainWindow::on_dateEditNote_editingFinished()
+{
+    qDebug() << "We are Here";
+}
 
-
-
-
-
-
-
-
+void MainWindow::on_dateEditNote_dateChanged(const QDate &date)
+{
+    QString logdate = date.toString("yyyy-MM-dd");
+    modelNote->setFilter(QString(" logdate = '%1' ").arg(logdate));
+    modelNote->select();
+    ui->tableViewNoteHuman->reset();
+}

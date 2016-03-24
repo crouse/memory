@@ -34,6 +34,7 @@ public:
     QSqlTableModel *modelChoose;
     QSqlTableModel *modelQ;
     QSqlTableModel *modelQE;
+    QSqlTableModel *modelNote;
     QSqlTableModel *modelQuery;
     QLineEdit *searchLineEdit;
 
@@ -67,6 +68,10 @@ private slots:
     void on_pushButtonDataExport_clicked();
 
     void on_pushButtonDataImport_clicked();
+
+    void on_dateEditNote_editingFinished();
+
+    void on_dateEditNote_dateChanged(const QDate &date);
 
 private:
     Ui::MainWindow *ui;
