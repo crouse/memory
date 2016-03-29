@@ -28,7 +28,7 @@ public:
     int updateDict(QString name, QString gender, QString phone, QString birthday);
     bool ifSignedToday(QString name, QString gender, QString phone, QString logdate);
     void clearEdits();
-    int choose();
+    int choose(int filterType);
     QSqlDatabase database;
     QSqlTableModel *modelEdit;
     QSqlTableModel *modelChoose;
@@ -77,6 +77,10 @@ private slots:
     void on_tableViewNoteHuman_doubleClicked(const QModelIndex &index);
 
     void on_pushButtonSaveNote_clicked();
+
+    void on_toolButton_clicked();
+
+    void on_actionFirstLetter_triggered();
 
 private:
     Ui::MainWindow *ui;

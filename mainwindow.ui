@@ -33,7 +33,7 @@
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideRight</enum>
@@ -81,6 +81,16 @@
              </property>
              <property name="clearButtonEnabled">
               <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QToolButton" name="toolButton">
+             <property name="toolTip">
+              <string>点击首字母查询</string>
+             </property>
+             <property name="text">
+              <string>...</string>
              </property>
             </widget>
            </item>
@@ -137,6 +147,9 @@
              <property name="displayFormat">
               <string>yyyy-MM-dd</string>
              </property>
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
            <item>
@@ -149,13 +162,16 @@
            <item>
             <widget class="QDateEdit" name="dateEditEcurrent">
              <property name="buttonSymbols">
-              <enum>QAbstractSpinBox::NoButtons</enum>
+              <enum>QAbstractSpinBox::UpDownArrows</enum>
              </property>
              <property name="currentSection">
               <enum>QDateTimeEdit::YearSection</enum>
              </property>
              <property name="displayFormat">
               <string>yyyy-MM-dd</string>
+             </property>
+             <property name="calendarPopup">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -182,8 +198,20 @@
         </item>
         <item>
          <widget class="QTableView" name="tableViewDict">
+          <property name="focusPolicy">
+           <enum>Qt::ClickFocus</enum>
+          </property>
+          <property name="autoScroll">
+           <bool>false</bool>
+          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="showDropIndicator" stdset="0">
+           <bool>false</bool>
+          </property>
+          <property name="dragDropOverwriteMode">
+           <bool>false</bool>
           </property>
           <property name="defaultDropAction">
            <enum>Qt::IgnoreAction</enum>
@@ -192,10 +220,7 @@
            <bool>true</bool>
           </property>
           <property name="selectionMode">
-           <enum>QAbstractItemView::SingleSelection</enum>
-          </property>
-          <property name="selectionBehavior">
-           <enum>QAbstractItemView::SelectRows</enum>
+           <enum>QAbstractItemView::NoSelection</enum>
           </property>
           <attribute name="horizontalHeaderCascadingSectionResizes">
            <bool>false</bool>
@@ -620,6 +645,7 @@
    <addaction name="actionCurrentDateRows"/>
    <addaction name="actionExport"/>
    <addaction name="actionUpdatePerson"/>
+   <addaction name="actionFirstLetter"/>
   </widget>
   <action name="actionDict">
    <property name="text">
@@ -647,6 +673,14 @@
   <action name="actionUpdatePerson">
    <property name="text">
     <string>updatePersonByName</string>
+   </property>
+  </action>
+  <action name="actionFirstLetter">
+   <property name="text">
+    <string>firstLetter</string>
+   </property>
+   <property name="shortcut">
+    <string>Meta+Return</string>
    </property>
   </action>
  </widget>
