@@ -787,11 +787,21 @@ void MainWindow::on_pushButtonDataExport_clicked()
     QString exportSql = QString("select name, gender, phone, birthday, logdate,  ps from sign where logdate >= '%1' and logdate <= '%2'").arg(start).arg(end);
     QString savePath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
     QString saveFile = QString("%1_%2.data").arg(start).arg(end);
+    QString saveFilePlain = QString("%1_%2.txt").arg(start).arg(end);
     QString saveAbsPath = QString("%1/%2").arg(savePath).arg(saveFile);
+    QString saveAbsPathPlain = QString("%1/%2").arg(savePath).arg(saveFilePlain);
     qDebug() << exportSql;
 
     QFile fileOut(saveAbsPath);
+    QFile fileOutPlain(saveAbsPathPlain);
+
     if (!fileOut.open(QIODevice::WriteOnly| QIODevice::Text)) {
+        qDebug() << "open file error";
+        QMessageBox::information(this, "", "贤二，出错了，文件打不开。你找写代码的那家伙吧，我帮不上你。");
+        return;
+    }
+
+     if (!fileOutPlain.open(QIODevice::WriteOnly| QIODevice::Text)) {
         qDebug() << "open file error";
         QMessageBox::information(this, "", "贤二，出错了，文件打不开。你找写代码的那家伙吧，我帮不上你。");
         return;
@@ -799,6 +809,10 @@ void MainWindow::on_pushButtonDataExport_clicked()
 
     QTextStream streamFileOut(&fileOut);
     streamFileOut.setCodec("UTF-8");
+
+
+    QTextStream streamFileOutPlain(&fileOutPlain);
+    streamFileOutPlain.setCodec("UTF-8");
 
     QSqlQuery query;
     query.exec(exportSql);
@@ -815,11 +829,14 @@ void MainWindow::on_pushButtonDataExport_clicked()
         base64.append(recordStr);
         QString base64Str = base64.toBase64();
         streamFileOut << base64Str << "\n";
+        streamFileOutPlain << recordStr;
         qDebug() << name << gender << phone << birthday << logdate << current;
         streamFileOut.flush();
+        streamFileOutPlain.flush();
     }
 
     fileOut.close();
+    fileOutPlain.close();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -892,7 +909,6 @@ void MainWindow::on_pushButtonDataImport_clicked()
    database.commit();
    openFile.close();
    ui->lineEditDataImport->clear();
-   ui->labelAlert->setText(QString("贤二，刚才你导入了这个文件：%1 ").arg(fileName));
    qDebug() << "我在后面，你没看到我嘛";
 }
 
@@ -937,4 +953,24 @@ void MainWindow::on_toolButton_clicked()
 void MainWindow::on_actionFirstLetter_triggered()
 {
     choose(PINYIN_NAME);
+}
+
+void MainWindow::on_tableViewDict_customContextMenuRequested(const QPoint &pos)
+{
+    qDebug() << "right mouse";
+    qDebug() << pos;
+}
+
+void MainWindow::on_tableViewSigns_customContextMenuRequested(const QPoint &pos)
+{
+   qDebug() << "for delete one line" << pos;
+   int rowNum = ui->tableViewSigns->verticalHeader()->logicalIndexAt(pos);
+   int colNum = ui->tableViewSigns->horizontalHeader()->logicalIndexAt(pos);
+   if (rowNum < 0 || colNum < 0) return;
+
+   QString name = modelEdit->index(rowNum, 0).data().toString();
+   QString phone = modelEdit->index(rowNum, 2).data().toString();
+
+
+   QMenu *popMenu = new QMenu(this);
 }

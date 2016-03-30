@@ -82,6 +82,10 @@ private slots:
 
     void on_actionFirstLetter_triggered();
 
+    void on_tableViewDict_customContextMenuRequested(const QPoint &pos);
+
+    void on_tableViewSigns_customContextMenuRequested(const QPoint &pos);
+
 private:
     Ui::MainWindow *ui;
 };

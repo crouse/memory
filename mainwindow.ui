@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>911</width>
-    <height>709</height>
+    <height>571</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideRight</enum>
@@ -214,7 +214,7 @@
            <bool>false</bool>
           </property>
           <property name="defaultDropAction">
-           <enum>Qt::IgnoreAction</enum>
+           <enum>Qt::ActionMask</enum>
           </property>
           <property name="alternatingRowColors">
            <bool>true</bool>
@@ -229,6 +229,9 @@
         </item>
         <item>
          <widget class="QTableView" name="tableViewSigns">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <property name="alternatingRowColors">
            <bool>true</bool>
           </property>
@@ -379,16 +382,16 @@
        <widget class="QGroupBox" name="groupBoxDataExport">
         <property name="geometry">
          <rect>
-          <x>220</x>
-          <y>270</y>
-          <width>461</width>
-          <height>73</height>
+          <x>30</x>
+          <y>20</y>
+          <width>162</width>
+          <height>145</height>
          </rect>
         </property>
         <property name="title">
          <string>==&gt; 按日期导出签到数据: &lt;==</string>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
          <item>
           <widget class="QDateEdit" name="dateEditDataExportStart">
            <property name="displayFormat">
@@ -396,6 +399,13 @@
            </property>
            <property name="calendarPopup">
             <bool>true</bool>
+           </property>
+           <property name="date">
+            <date>
+             <year>2016</year>
+             <month>1</month>
+             <day>1</day>
+            </date>
            </property>
           </widget>
          </item>
@@ -406,6 +416,13 @@
            </property>
            <property name="calendarPopup">
             <bool>true</bool>
+           </property>
+           <property name="date">
+            <date>
+             <year>2016</year>
+             <month>1</month>
+             <day>1</day>
+            </date>
            </property>
           </widget>
          </item>
@@ -421,16 +438,16 @@
        <widget class="QGroupBox" name="groupBox">
         <property name="geometry">
          <rect>
-          <x>220</x>
-          <y>340</y>
-          <width>461</width>
-          <height>70</height>
+          <x>30</x>
+          <y>180</y>
+          <width>181</width>
+          <height>98</height>
          </rect>
         </property>
         <property name="title">
-         <string>==&gt; 导入数据，拖拽文件到下面松开，点击导入数据即可：&lt;==</string>
+         <string>==&gt; 拖拽文件到下面松开：&lt;==</string>
         </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_5">
+        <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
           <widget class="QLineEdit" name="lineEditDataImport">
            <property name="acceptDrops">
@@ -452,38 +469,6 @@
           </widget>
          </item>
         </layout>
-       </widget>
-       <widget class="QLabel" name="label">
-        <property name="geometry">
-         <rect>
-          <x>290</x>
-          <y>240</y>
-          <width>331</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Panel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <property name="text">
-         <string>贤二，请注意数据安全，不要通过网络传播此数据！！！</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="labelAlert">
-        <property name="geometry">
-         <rect>
-          <x>110</x>
-          <y>150</y>
-          <width>701</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="tab">
