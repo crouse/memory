@@ -33,7 +33,7 @@
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideRight</enum>
@@ -201,6 +201,9 @@
           <property name="focusPolicy">
            <enum>Qt::ClickFocus</enum>
           </property>
+          <property name="acceptDrops">
+           <bool>false</bool>
+          </property>
           <property name="autoScroll">
            <bool>false</bool>
           </property>
@@ -209,6 +212,9 @@
           </property>
           <property name="showDropIndicator" stdset="0">
            <bool>false</bool>
+          </property>
+          <property name="dragEnabled">
+           <bool>true</bool>
           </property>
           <property name="dragDropOverwriteMode">
            <bool>false</bool>
@@ -546,8 +552,21 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButtonSaveNote">
+            <property name="statusTip">
+             <string>ctrl + s</string>
+            </property>
             <property name="text">
              <string>保存记录</string>
+            </property>
+            <property name="shortcut">
+             <string>Meta+S</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonExportCurrentNote">
+            <property name="text">
+             <string>笔记导出</string>
             </property>
            </widget>
           </item>
@@ -588,7 +607,14 @@
             <bool>false</bool>
            </property>
           </widget>
-          <widget class="QTableView" name="tableViewNoteList"/>
+          <widget class="QTableView" name="tableViewNoteList">
+           <property name="showDropIndicator" stdset="0">
+            <bool>false</bool>
+           </property>
+           <property name="showGrid">
+            <bool>false</bool>
+           </property>
+          </widget>
          </widget>
         </item>
         <item>
@@ -658,6 +684,9 @@
   <action name="actionUpdatePerson">
    <property name="text">
     <string>updatePersonByName</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;用来当前记录的人名的所有信息， 在编辑标签的页面中， 更改除人名以外的所有信息，点击此按钮后会按当前输入更新所有此姓名的信息。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <action name="actionFirstLetter">

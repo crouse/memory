@@ -319,6 +319,18 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->dateEditEcurrent->setDate(QDate::currentDate());
     ui->dateEditEBirth->setDate(QDate(1900, 1, 1));
     ui->dateEditNote->setDate(QDate::currentDate());
+
+    ui->actionFirstLetter->setText(QChar(fa::leaf));
+    ui->actionFirstLetter->setFont(awesome->font(14));
+
+    ui->pushButtonSaveNote->setText(QChar(fa::database));
+    ui->pushButtonSaveNote->setFont(awesome->font(14));
+    ui->pushButtonSaveNote->setFlat(true);
+
+    ui->pushButtonExportCurrentNote->setText(QChar(fa::filetext));
+    ui->pushButtonExportCurrentNote->setFont(awesome->font(14));
+    ui->pushButtonExportCurrentNote->setFlat(true);
+
 }
 
 MainWindow::~MainWindow()
@@ -375,7 +387,7 @@ void MainWindow::setDatabase()
 
         signTableFieldsStringList << "姓名" << "性别" << "手机" << "生日" << "日期" << "当前记录时间" << "附注";
         signDictTableFieldsStringList << "姓名" << "性别" << "手机" << "生日" << "签到次数";
-        notesStringList << "时间" << "姓名" << "手机" << "发言记录";
+        notesStringList << "姓名" << "手机" << "时间" << "发言记录";
 
         setModel(ui->tableViewSigns, "modelEdit", "sign", &signTableFieldsStringList, "", 0);
         setModel(ui->tableViewDict, "modelChoose", "sign_dict", &signDictTableFieldsStringList, "", 4);
@@ -941,6 +953,24 @@ void MainWindow::on_tableViewNoteHuman_doubleClicked(const QModelIndex &index)
 void MainWindow::on_pushButtonSaveNote_clicked()
 {
     if (ui->lineEditNoteName->text().isEmpty()) return;
+    QString name = ui->lineEditNoteName->text();
+    QString phone = ui->lineEditNotePhone->text();
+    QString text = ui->plainTextEditNote->toPlainText();
+    qDebug() << name << phone << text;
+    QString logtime = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
+    QSqlQuery query;
+    QString sql = QString("insert into notes(name, phone, logtime, note) values ('%1', '%2', '%3', '%4')").arg(name).arg(phone).arg(logtime).arg(text);
+    query.exec(sql);
+    database.commit();
+
+    QString filter = QString("logtime > '%1' and logtime < '%2'")
+                          .arg(ui->dateEditNote->date().toString("yyyy-MM-dd"))
+                          .arg(ui->dateEditNote->date().addDays(1).toString("yyyy-MM-dd"));
+    qDebug() << filter;
+    modelNotes->setFilter(filter);
+    modelNotes->select();
+    ui->tableViewNoteList->reset();
+    ui->plainTextEditNote->clear();
 
 }
 
@@ -974,3 +1004,44 @@ void MainWindow::on_tableViewSigns_customContextMenuRequested(const QPoint &pos)
 
    QMenu *popMenu = new QMenu(this);
 }
+
+void MainWindow::on_pushButtonExportCurrentNote_clicked()
+{
+    // 导出当前时间的笔记
+    QString dateStart = ui->dateEditNote->date().toString("yyyy-MM-dd");
+    QString dateEnd = ui->dateEditNote->date().addDays(1).toString("yyyy-MM-dd");
+    QString sql = QString("select logtime, name, note from notes where logtime > '%1' and logtime < '%2'").arg(dateStart).arg(dateEnd);
+    qDebug() << sql;
+
+    QString saveAbsPath = QString("%1/%2.md").arg(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation)).arg(dateStart);
+
+    QFile fileOut(saveAbsPath);
+    if (!fileOut.open(QIODevice::WriteOnly| QIODevice::Text)) {
+        qDebug() << "open file error";
+        QMessageBox::information(this, "", "贤二，出错了，文件打不开。你找写代码的那家伙吧，我帮不上你。");
+        return;
+    }
+
+    QTextStream streamFileOut(&fileOut);
+    streamFileOut.setCodec("UTF-8");
+
+    QSqlQuery q(sql);
+    while(q.next()) {
+        QString logtime = q.value(0).toString();
+        QString name = q.value(1).toString();
+        QString note = q.value(2).toString();
+        streamFileOut << "> " << logtime << " " << name << "\n\n";
+        streamFileOut << note << "\n\n";
+    }
+
+    fileOut.close();
+}
+
+
+
+
+
+
+
+
+

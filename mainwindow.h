@@ -86,6 +86,8 @@ private slots:
 
     void on_tableViewSigns_customContextMenuRequested(const QPoint &pos);
 
+    void on_pushButtonExportCurrentNote_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
