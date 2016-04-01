@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QSqlRecord>
+#include <QSqlError>
 #include <QDebug>
 #include <QColor>
 #include <QLabel>
@@ -331,6 +332,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButtonExportCurrentNote->setFont(awesome->font(14));
     ui->pushButtonExportCurrentNote->setFlat(true);
 
+    deleteRowNum = -1;
 }
 
 MainWindow::~MainWindow()
@@ -375,10 +377,14 @@ void MainWindow::setDatabase()
                                     " name varchar(32),"
                                     " pinyin varchar(10) )");
 
+        QString pinyinIndex = "CREATE UNIQUE INDEX unique_index_name on pinyin(name)";
+
         query.exec(signSql);
         query.exec(signDictSql);
         query.exec(notesSql);
         query.exec(pinyinSql);
+        query.exec(pinyinIndex);
+
         database.commit();
 
         QStringList signTableFieldsStringList;
@@ -496,9 +502,28 @@ void MainWindow::initDict()
     database.commit();
 }
 
+void MainWindow::initFirstLetter()
+{
+    QSqlQuery query, insertQuery;
+    query.exec("delete from pinyin");
+    qDebug() << query.lastError();
+    database.commit();
+
+    query.exec("select name from sign_dict");
+    while(query.next()) {
+        QString name = query.value(0).toString();
+        QString firstLetterName = toChineseSpell(name);
+        qDebug() << name << firstLetterName;
+        insertQuery.exec(QString("insert into pinyin(name, pinyin) values ('%1', '%2')").arg(name).arg(firstLetterName));
+    }
+
+    database.commit();
+}
+
 void MainWindow::on_actionDict_triggered()
 {
     initDict();
+    initFirstLetter();
 }
 
 void MainWindow::on_actionList_triggered()
@@ -630,7 +655,7 @@ void MainWindow::on_pushButtonEsave_clicked()
 
     QSqlQuery query;
     query.exec(QString("insert into sign(name, gender, phone, birthday, logdate, current) values ('%1', '%2', '%3', '%4', '%5', '%6')").arg(name).arg(gender).arg(phone).arg(birthday).arg(logdate).arg(current));
-    query.exec(QString("insert into pinyin(name, pinyin) values ('%1', '%2') ").arg(name).arg(pinyin));
+    query.exec(QString("replace into pinyin(name, pinyin) values ('%1', '%2') ").arg(name).arg(pinyin));
     modelEdit->setFilter(QString("logdate = '%1'").arg(logdate));
     modelEdit->select();
     ui->tableViewSigns->reset();
@@ -996,13 +1021,19 @@ void MainWindow::on_tableViewSigns_customContextMenuRequested(const QPoint &pos)
    qDebug() << "for delete one line" << pos;
    int rowNum = ui->tableViewSigns->verticalHeader()->logicalIndexAt(pos);
    int colNum = ui->tableViewSigns->horizontalHeader()->logicalIndexAt(pos);
-   if (rowNum < 0 || colNum < 0) return;
+   if (rowNum < 0 || colNum > 0) return;
+   deleteRowNum = rowNum;
+
+   qDebug() << "row num" << rowNum << "col num" << colNum;
 
    QString name = modelEdit->index(rowNum, 0).data().toString();
    QString phone = modelEdit->index(rowNum, 2).data().toString();
 
 
    QMenu *popMenu = new QMenu(this);
+   popMenu->addAction(ui->actionDeleteRow);
+   popMenu->exec(QCursor::pos());
+   delete popMenu;
 }
 
 void MainWindow::on_pushButtonExportCurrentNote_clicked()
@@ -1038,10 +1069,13 @@ void MainWindow::on_pushButtonExportCurrentNote_clicked()
 }
 
 
-
-
-
-
-
-
-
+void MainWindow::on_actionDeleteRow_triggered()
+{
+    qDebug() << "delete one row" << deleteRowNum;
+    QString logdate = ui->dateEditEcurrent->date().toString("yyyy-MM-dd");
+    modelEdit->removeRow(deleteRowNum);
+    modelEdit->setFilter(QString("logdate = '%1'").arg(logdate));
+    modelEdit->select();
+    ui->tableViewSigns->reset();
+    deleteRowNum = -1;
+}

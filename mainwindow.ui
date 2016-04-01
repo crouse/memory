@@ -33,7 +33,7 @@
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="elideMode">
        <enum>Qt::ElideRight</enum>
@@ -695,6 +695,11 @@
    </property>
    <property name="shortcut">
     <string>Meta+Return</string>
+   </property>
+  </action>
+  <action name="actionDeleteRow">
+   <property name="text">
+    <string>删除本行信息</string>
    </property>
   </action>
  </widget>

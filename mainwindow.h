@@ -25,6 +25,7 @@ public:
     void setModel(QTableView *tableViewName, QString modelName, QString tableName, QStringList *tableFields, QString filter, int orderNum);
     void setMainToolBar();
     void initDict();
+    void initFirstLetter();
     int updateDict(QString name, QString gender, QString phone, QString birthday);
     bool ifSignedToday(QString name, QString gender, QString phone, QString logdate);
     void clearEdits();
@@ -38,6 +39,9 @@ public:
     QSqlTableModel *modelNotes;
     QSqlTableModel *modelQuery;
     QLineEdit *searchLineEdit;
+
+private:
+    int deleteRowNum;
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event);
@@ -87,6 +91,9 @@ private slots:
     void on_tableViewSigns_customContextMenuRequested(const QPoint &pos);
 
     void on_pushButtonExportCurrentNote_clicked();
+
+    void on_actionDeleteRow_triggered();
+
 
 private:
     Ui::MainWindow *ui;
