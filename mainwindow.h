@@ -40,6 +40,8 @@ public:
     QSqlTableModel *modelQuery;
     QLineEdit *searchLineEdit;
 
+    QString sqlitePath;
+
 private:
     int deleteRowNum;
 

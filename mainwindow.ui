@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>911</width>
+    <width>1024</width>
     <height>571</height>
    </rect>
   </property>
@@ -80,7 +80,7 @@
               <string>姓名：</string>
              </property>
              <property name="clearButtonEnabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -127,8 +127,20 @@
            </item>
            <item>
             <widget class="QLineEdit" name="lineEditEphone">
+             <property name="inputMethodHints">
+              <set>Qt::ImhDigitsOnly</set>
+             </property>
+             <property name="inputMask">
+              <string>0000 0000 000</string>
+             </property>
              <property name="placeholderText">
-              <string>电话：</string>
+              <string>手机号：</string>
+             </property>
+             <property name="cursorMoveStyle">
+              <enum>Qt::VisualMoveStyle</enum>
+             </property>
+             <property name="clearButtonEnabled">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -636,7 +648,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>911</width>
+     <width>1024</width>
      <height>22</height>
     </rect>
    </property>

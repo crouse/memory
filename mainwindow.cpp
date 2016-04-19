@@ -262,6 +262,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    sqlitePath = QString("%1/签到数据请勿删除/").arg(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
+
     setDatabase();
     setAcceptDrops(true);
     ui->tableViewDict->hide();
@@ -332,7 +335,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->pushButtonExportCurrentNote->setFont(awesome->font(14));
     ui->pushButtonExportCurrentNote->setFlat(true);
 
+    ui->dateEditDataExportStart->setDate(QDate::currentDate());
+    ui->dateEditDataExportEnd->setDate(QDate::currentDate());
+
     deleteRowNum = -1;
+
 }
 
 MainWindow::~MainWindow()
@@ -342,9 +349,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::setDatabase()
 {
+    qDebug() << qApp->applicationDirPath();
     database = QSqlDatabase::addDatabase("QSQLITE");
-    QString dbpath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
-    database.setDatabaseName(QString("%1/sign.db").arg(dbpath));
+
+    QDir dir;
+    dir.mkpath(sqlitePath);
+    database.setDatabaseName(QString("%1/sign.db").arg(sqlitePath));
 
     if (!database.open()) {
         QMessageBox::information(this, "", "无法连接数据库");
@@ -625,6 +635,7 @@ void MainWindow::on_pushButtonEsave_clicked()
     QString name = ui->lineEditEname->text().trimmed();
     QString gender = ui->comboBoxEgender->currentText().trimmed();
     QString phone = ui->lineEditEphone->text().trimmed();
+    phone = phone.remove(" ");
     QString birthday = ui->dateEditEBirth->date().toString("yyyy-MM-dd");
     QString logdate = ui->dateEditEcurrent->date().toString("yyyy-MM-dd");
 
@@ -701,7 +712,15 @@ void MainWindow::on_actionCurrentDateRows_triggered()
 
 void MainWindow::on_actionExport_triggered()
 {
-    qDebug() << "export current backups";
+    QString sign = QString("%1/sign.db").arg(sqlitePath);
+    if (!QFile::exists(sign)) return;
+
+    QString backup = QString("%1/备份签到数据库位置/%2").arg(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation)).arg(QDateTime::currentDateTime().toString("yyyy-MM-dd"));
+    QDir dir;
+    dir.mkpath(backup);
+    QString backupSign = QString("%1/sign.db.%2").arg(backup).arg(QDate::currentDate().toString("yyyy-MM-dd"));
+    QFile::copy(sign, backupSign);
+    QMessageBox::information(this, "", backupSign);
 }
 
 void MainWindow::on_pushButtonQ_clicked()
@@ -821,7 +840,7 @@ void MainWindow::on_pushButtonDataExport_clicked()
 {
     QString start = ui->dateEditDataExportStart->date().toString("yyyy-MM-dd");
     QString end = ui->dateEditDataExportEnd->date().toString("yyyy-MM-dd");
-    QString exportSql = QString("select name, gender, phone, birthday, logdate,  ps from sign where logdate >= '%1' and logdate <= '%2'").arg(start).arg(end);
+    QString exportSql = QString("select name, gender, phone, birthday, logdate, current,  ps from sign where logdate >= '%1' and logdate <= '%2'").arg(start).arg(end);
     QString savePath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
     QString saveFile = QString("%1_%2.data").arg(start).arg(end);
     QString saveFilePlain = QString("%1_%2.txt").arg(start).arg(end);
